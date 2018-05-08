@@ -1,100 +1,181 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <style>
-/* Bordered form */
-form {
-    border: 3px solid #f1f1f1;
-}
+    <link id="pagestyle" href='./intense/demo/css/styles.css' rel='stylesheet'>
 
-/* Full-width inputs */
-input[type=text], input[type=password] {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
+    <!-- JS -->
+    <script src='./intense/intense.js'></script>
+    <title>SORT-DR</title>
+    <link rel="stylesheet" href="./example/highlight.js/zenburn.css">
+    <link rel="stylesheet" href="./css/theme-dark/annotorious-dark.css" />
+    <script src="./example/highlight.js/highlight.pack.js"></script>
+    <script src="./annotorious.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 
-/* Set a style for all buttons */
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-}
-
-/* Add a hover effect for buttons */
-button:hover {
-    opacity: 0.8;
-}
-
-/* Extra style for the cancel button (red) */
-.cancelbtn {
-    width: auto;
-    padding: 10px 18px;
-    background-color: #f44336;
-}
-
-/* Center the avatar image inside this container */
-.imgcontainer {
-    text-align: center;
-    margin: 24px 0 12px 0;
-}
-
-/* Avatar image */
-img.avatar {
-    width: 40%;
-    border-radius: 50%;
-}
-
-/* Add padding to containers */
-.container {
-    padding: 16px;
-}
-
-/* The "Forgot password" text */
-span.psw {
-    float: right;
-    padding-top: 16px;
-}
-
-/* Change styles for span and cancel button on extra small screens */
-@media screen and (max-width: 300px) {
-    span.psw {
-        display: block;
-        float: none;
-    }
-    .cancelbtn {
-        width: 100%;
-    }
-}
-</style>
+    
 </head>
-<body>
-<form action="./ACJ-run.php" method=POST>
-  <div class="imgcontainer">
-   
-  </div>
+    <div style="display:block" id="bettworse"><table width="100%"><tr><td><button onclick="setbut('a')">A is Better</button></td>
+    <td><button onclick="setbut('b')">B is Better</button></td></tr></table></div>
+<div style="display:none" id="rationale">
+</b>How confident are you?</b>  <i>Unsure</i> <input id="conf" type="range" > <i>Very confident</i>
+</input>
+<br>
+<table width="50%"><tr><td>
+Positives about a:</td><td> <textarea id="apos" rows=3 cols=40></textarea></td><td>
+Negatives about a:</td><td> <textarea id="aneg" rows=3 cols=40></textarea></td></tr>
+<tr><td>
+Positives about b: </td><td><textarea id="bpos" rows=3 cols=40></textarea></td><td>
+Negatives about b:</td><td> <textarea id="bneg" rows=3 cols=40></textarea></td></tr></table>
+<p>
+<button onclick="nextpair()">Submit answer</button>
+</div>
+<div id="pictures">
+<table width=100% height=100%><tr><td width=50%>
+        
+    <img id="myImage" class="demo-image first"   style="width:100%;height:600px " data-image="./pdfs/test1.jpg"></img>
+    <input min=0 max=128 type="range" oninput="setcolor()" id="colorr"><br>
+    <input min=0 max=128 type="range" oninput="setcolor()" id="colorb"><br>
+    <input min=0 max=128 type="range" oninput="setcolor()" id="colorg"><br>
 
-  <div class="container">
-    <label><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="uname" required>
+</td><td>
+            
+    <img id="myImage2" class="demo-image second" style="width:100%;height:600px" data-image="./pdfs/test2.jpg"></img>
+    <input min=0 max=64 type="range" onchange="setcolor()" id="rcolorr"><br>
+    <input min=0 max=64 type="range" onchange="setcolor()" id="rcolorb"><br>
+    <input min=0 max=64 type="range" onchange="setcolor()" id="rcolorg"><br>
 
-    <label><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required>
+<!--      <img src="./pdfs/test1.jpg>"/></div></td><td width=50%>
+      <img src="./pdfs/test2.jpg"/></div>-->
 
-    <button type="submit">Login</button>
-    <input type="checkbox" checked="checked"> Remember me
-  </div>
+</td></tr></table>
 
-  <div class="container" style="background-color:#f1f1f1">
-    <button type="button" class="cancelbtn">Cancel</button>
-    <span class="psw">Forgot <a href="#">password?</a></span>
-  </div>
-</form>
-</body>
+</div>
+<script>
+    function annotate ()
+    {}
+
+    function setcolor()
+    {
+        hexString1 = document.getElementById("colorr").value.toString(16);        
+        hexString2 = document.getElementById("colorb").value.toString(16);        
+        hexString3 = document.getElementById("colorg").value.toString(16);        
+
+        tintImage(document.getElementById('myImage'), "#" + hexString1 + hexString2 + hexString3, imgsrc)
+    }
+
+    imgsrc = ""
+    leftimg = ""
+    rightimg = ""
+    window.onload = function() {
+    var elements = document.querySelectorAll( '.demo-image' );
+    Intense( elements );
+    imgsrc = document.getElementById("myImage").src
+    ipcRenderer.send("async", "refresh,block")
+
+    }
+    mystyle = document.styleSheets.item(0).cssRules[7].style.backgroundImage
+    console.log (mystyle)
+//    document.styleSheets.item(0).cssRules[8].style.backgroundImage = 'url("../../../pdfs/201229356 Francesca Morris.jpg")'
+    //    document.styleSheets.item(0).cssRules[8].style.backgroundImage = ""
+    
+      var {ipcRenderer, remote} = require('electron');  
+      var main = remote.require("./main.js");
+
+      // Send async message to main proces
+      ipcRenderer.send('async', "refresh,block");
+
+      // Listen for async-reply message from main process
+      ipcRenderer.on('async-reply', (event, arg) => {  
+          myargs = arg.split(",")
+          // Print 2
+          console.log("here: " + arg);
+
+          document.styleSheets.item(0).cssRules[7].style.backgroundImage = 'url("../../../pdfs/' + myargs[0] + '")'
+          document.styleSheets.item(0).cssRules[8].style.backgroundImage = 'url("../../../pdfs/' + myargs[1] + '")'
+          leftimg = myargs[0]
+          rightimg = myargs[1]
+          document.getElementById ("myImage").setAttribute("data-image", "./pdfs/" + myargs[0])
+
+          document.getElementById ("myImage2").setAttribute("data-image", "./pdfs/" + myargs[1])
+//document.getElementById("myImage1").setAttribute("data-image", myargs[1]);
+
+          // Send sync message to main process
+//          let mainValue = ipcRenderer.sendSync('sync', 3);
+          // Print 4
+//          console.log("asdf " + mainValue);
+      });
+
+      // Listen for main message
+      ipcRenderer.on('ping', (event, arg) => {  
+          // Print 5
+          console.log("there: " + arg);
+          // Invoke method directly on main process
+          main.pong(6);
+      });
+ 
+var buttonval = "";
+function setbut(val)
+{
+    ipcRenderer.send("async", "anno," + leftimg + "," + rightimg + "," + val)
+}
+
+function nextpair()
+{
+    ipcRenderer.send("async", "refresh")
+    bestfile = "";
+    worstfile = "";
+
+    bestfile = "<?=getfile($l)?>";
+    worstfile = "<?=getfile($r)?>";
+
+getstring = leftimg  + "," + rightimg + "," + buttonval;
+
+ipcRenderer.send('async', getstring);
+
+document.getElementById("rationale").style.display="none";
+document.getElementById ("bettworse").style.display= "block";
+
+}
+
+   function tintImage(imgElement,tintColor, imgsrc) {
+    imgElement.src = imgsrc
+    // create hidden canvas (using image dimensions)
+    var canvas = document.createElement("canvas");
+    canvas.width = imgElement.offsetWidth;
+    canvas.height = imgElement.offsetHeight;
+
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(imgElement,0,0);
+
+    var map = ctx.getImageData(0,0,320,240);
+    var imdata = map.data;
+
+    // convert image to grayscale
+    var r,g,b,avg;
+    for(var p = 0, len = imdata.length; p < len; p+=4) {
+        r = imdata[p]
+        g = imdata[p+1];
+        b = imdata[p+2];
+        // alpha channel (p+3) is ignored           
+
+        avg = Math.floor((r+g+b)/3);
+
+        imdata[p] = imdata[p+1] = imdata[p+2] = avg;
+    }
+
+    ctx.putImageData(map,0,0);
+
+    // overlay filled rectangle using lighter composition
+    ctx.globalCompositeOperation = "lighter";
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle=tintColor;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // replace image source with canvas data
+    imgElement.src = canvas.toDataURL();
+}
+</script>
+
 </html>
+
+

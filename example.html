@@ -1,0 +1,136 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="./example/highlight.js/zenburn.css">
+    <link rel="stylesheet" href="./css/theme-dark/annotorious-dark.css" />
+    <script src="./example/highlight.js/highlight.pack.js"></script>
+    <script src="./annotorious.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <style>
+      html, body {
+        background-color:#dfdfdf;
+        min-height:100%;
+        padding:0;
+        margin:0;
+        font-family:"helvetica neue","helvetica","arial","sans-serif";
+        font-size:14px;
+        line-height:22px;
+      }
+
+      h2 {
+        margin-top:40px;
+      }
+
+      a {
+        color:#333;
+      }
+
+      .column {
+        width:60%;
+        min-width:800px;
+        margin:0 auto;
+        padding:10px 40px 80px 40px;
+        background-color:#eaeaea;
+        min-height:100%;
+        border-width:0px 1px;
+        border-style:solid;
+        border-color:#dadada;
+      }
+
+      .image-caption {
+        line-height: normal;
+        font-weight: bold;
+        font-size: 12px;
+        text-align: center;
+      }
+    </style>    
+  </head>
+  <body onload="makeannot()">
+    <h1>Select the areas of the image which you think are important and comment on what you notice:</h1>
+    <button onclick="submit()">SUBMIT ANNOTATIONS</button><p>
+
+    <button onclick="setCaption('micro')">Microaneurism</button>
+    <button onclick="setCaption('rh')">Retinal Heammorhage</button>
+    <button onclick="setCaption('exudate')">Exudate</button>
+    <button onclick="setCaption('CWS')">Cotton Wool Spot</button><!--
+    <button onclick="setCaption('Multiblot')">multiple blot haemmorhage</button>
+    <button onclick="setCaption('NVE')">New vessels</button>
+    <button onclick="setCaption('Preretinal')">Preretinal Haemmorhage</button>
+    <button onclick="setCaption('Preretinal')">Preretinal Haemmorhage</button>
+    <button onclick="setCaption('Vitrius')">Vitrius Haemmorhage</button>
+    <button onclick="setCaption('IRMA')">IRMA</button>-->
+                  
+        <img id="myimage" style="width:100%;" class="annotatable" src="./pdfs/test2.jpg"></img>
+
+      </table>
+<script>
+     var {ipcRenderer, remote} = require('electron');  
+     var main = remote.require("./main.js");
+    
+  mycaption = ""
+    function makeannot() {
+//    anno.makeAnnotatable(document.getElementById('myimage'));
+  anno.addHandler('onAnnotationCreated', function(annotation) {
+      annotation.text =myCaption
+        console.log(annotation);
+    });
+  
+  anno.addHandler('onEditorShown', function (annotation)
+  {
+    document.getElementById("editortext").value = myCaption
+//    console.log (document.getElementById("editortext").value)
+  });
+  anno.addHandler("onSelectionCompleted", function(event)
+  {
+    console.log (event)
+  });
+
+  anno.addHandler("onPopupShown", function(annotation){
+    console.log(annotation);
+
+  });
+
+  //  var main = remote.require("../main.js");
+//    ipcRenderer.send("async", "updatepic")
+
+  }
+  function setCaption(caption)
+  {
+    myCaption = caption
+  }
+        ipcRenderer.on('async-reply', (event, arg) => {  
+          myargs = arg.split(",")
+          // Print 2
+          console.log (arg)
+          leftimg = myargs[0]
+          rightimg = myargs[1]
+/*          document.getElementById ("myImage").setAttribute("src", "../pdfs/" + myargs[0])
+
+          document.getElementById ("myImage2").setAttribute("src", "../pdfs/" + myargs[1])*/
+//document.getElementById("myImage1").setAttribute("data-image", myargs[1]);
+
+          // Send sync message to main process
+//          let mainValue = ipcRenderer.sendSync('sync', 3);
+          // Print 4
+//          console.log("asdf " + mainValue);
+      });
+function setpic(image)
+{
+  document.getElementById("myimage").setAttribute("src", "./pdfs/" + image)
+}
+  function submit()
+  {
+      console.log (anno.getAnnotations())
+      ipcRenderer.send ("async", "refresh,plop")
+      window.close()
+  }
+
+  function message()
+  {
+    
+  }
+
+</script>
+  
+  </body>
+</html>

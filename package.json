@@ -1,22 +1,26 @@
 {
-  "name": "pdfobject",
-  "version": "2.0.201604172",
-  "description": "An open-source standards-friendly JavaScript utility for embedding PDF files into HTML documents",
-  "main": "pdfobject.js",
+  "name": "electron-quick-start",
+  "version": "1.0.0",
+  "description": "A minimal Electron application",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron ."
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://pipwerks@github.com/pipwerks/PDFObject.git"
-  },
+  "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
-    "pdf", "pdfobject"
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
   ],
-  "author": "Philip Hutchison <philip@pipwerks.com> (http://pipwerks.com)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/pipwerks/PDFObject/issues"
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^1.8.4",
+    "electron-rebuild": "^1.7.3"
   },
-  "homepage": "https://github.com/pipwerks/PDFObject#readme"
+  "dependencies": {
+    "doubly-linked-list-js": "^0.1.8"
+  }
 }

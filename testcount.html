@@ -1,0 +1,139 @@
+<html>
+<input id="a" type=text/>better than<input id="b" type=text/> <button onclick="update()">update</button>
+<input id="myval" type=text></input>
+<button onclick="add()">add value</button>
+<button onclick="generatepairs()">generate pairs</button>
+<div id="displ"></div>
+<script>
+    myarr = new Array()
+    expertarr = new Array()
+    idx = 0
+    getfile()
+    function generatepairs ()
+    {
+        difficulty = prompt ("easy, medium or hard?", "asdf")
+        if (difficulty == "easy")
+        {
+            topcomp = Math.floor (Math.random () * (idx/4))
+            bottomcomp = idx - (Math.floor (Math.random () * (idx/4)))
+        }
+        if (difficulty == "medium")
+        {
+            topcomp = Math.floor (Math.random () * (idx/4)) + Math.floor(idx/4)
+            bottomcomp = idx - (Math.floor (Math.random () * (idx/4))) - Math.floor(idx/4)
+        }
+        if (difficulty == "hard")
+        {
+            topcomp = Math.floor (Math.random () * idx)
+            bottomcomp = topcomp - 1
+        }
+        alert ("compare " + topcomp + " with " + bottomcomp)
+    }
+
+    function update()
+    {
+        document.getElementById("displ").innerHTML = ""
+        if (getindexof(myarr[document.getElementById("a").value][1]) > getindexof(myarr[document.getElementById("b").value][1]))
+        alert ("error")
+        else
+        alert ("correct")
+        if (myarr[document.getElementById("b").value][0] >= myarr[document.getElementById("a").value][0])
+        {
+//            alert ("updating")
+            myarr[document.getElementById("a").value][0] = myarr[document.getElementById("b").value][0]+0.5
+            myarr = myarr.sort(function (a,b){return b[0] - a[0]})
+/*            temparr = new Array()*/
+            for (n=0;n<myarr.length;n++)
+            {
+                myarr[n][0] = myarr.length - n
+            }
+//            temparr = temparr.sort(function (a,b){return b[0] - a[0]})
+//            myarr = temparr.slice()
+
+        }
+        for (tn=0;tn<idx; tn++)
+        document.getElementById("displ").innerHTML =document.getElementById("displ").innerHTML  +  "<br>" + tn + ": " + myarr[tn][0] + ", " + myarr[tn][1]
+
+        
+    }
+    function getindexof (name)
+    {
+        for (n=0;n<idx;n++)
+        {
+            if (expertarr[n][1]==name)
+            {   
+                mind = n;
+                break;
+            }
+        }
+        return mind;
+    }
+    function getfile()
+    {
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", "composers.txt", true);
+        rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4) {
+        var allText = rawFile.responseText;
+      processtext (allText)
+    }
+  }
+  rawFile.send();
+
+    }
+    function processtext(mytext)
+    {
+        var lines = mytext.split('\n');
+        for(var i = 0;i < lines.length;i++){
+//            alert (lines[i])
+            try{
+                linedata = JSON.parse (lines[i])
+            }
+            catch(err)
+            {
+                console.log (lines[i] + ":" + err)
+            }
+//            console.log (linedata["name"])
+            myarr[idx] = new Array(0, linedata["name"])
+            expertarr[idx] = new Array (idx, linedata["name"])
+            idx ++
+        }
+        console.log(myarr)
+
+        for (tn=0;tn<idx; tn++)
+        document.getElementById("displ").innerHTML =document.getElementById("displ").innerHTML  +  "<br>" + tn + ": " + myarr[tn][0] + ", " + myarr[tn][1]
+
+    }
+function add()
+{
+
+    document.getElementById("displ").innerHTML = ""
+    if (idx == 0)
+        myarr[idx] = new Array (idx, document.getElementById("myval").value)
+
+    incs = false
+    if (idx >0)
+    {
+    for (n=0;n<idx; n++)
+    {
+        if (myarr[n][1] == document.getElementById("myval").value)
+        {
+            incs = true
+            myarr[n][0] = myarr[n][0] + 1
+            idx --
+        }
+    }
+
+    if (incs == false)
+        myarr[idx] = new Array (0, document.getElementById("myval").value)
+    }
+    idx = idx + 1    
+    myarr.sort (function (a,b){return b[0] - a[0]})
+    for (tn=0;tn<idx; tn++)
+        document.getElementById("displ").innerHTML =document.getElementById("displ").innerHTML  +  "<br>" + tn + ": " + myarr[tn][0] + ", " + myarr[tn][1]
+    
+
+}
+</script>
+</button>
+</html>
